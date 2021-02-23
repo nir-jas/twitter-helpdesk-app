@@ -31,11 +31,11 @@
             :id="item.id_str"
             :key="item.id_str"
             :text="item.text"
-            :author_id="item.user.id_str"
-            :author_name="item.user.name"
-            :author_image="item.user.profile_image_url_https"
-            :is_selected="activeTweetId == item.id_str"
-            :is_new="item.is_new ? true : false"
+            :author-id="item.user.id_str"
+            :author-name="item.user.name"
+            :author-image="item.user.profile_image_url_https"
+            :is-selected="activeTweetId == item.id_str"
+            :is-new="item.is_new ? true : false"
             @select="showTweetReplies(item)"
           />
         </div>
@@ -142,9 +142,7 @@ export default {
         if (!ws.getSubscription(`twitter:${tweet.id_str}`)) {
           this.replyChannel = ws.subscribe(`twitter:${tweet.id_str}`)
           this.replyChannel.on('new:tweet:reply', (data) => {
-            // eslint-disable-next-line no-console
-            console.log(data)
-            if (data.in_reply_to_status_id_str === this.activeTweetId) {
+            if (data.conversation_id === this.activeTweetId) {
               this.replyEvent = data
             }
           })
