@@ -97,8 +97,8 @@ export default {
 
 <style scoped>
 .chat-window {
-  height: calc(100vh - 238px);
-  max-height: calc(100vh - 238px);
+  height: calc(100vh - 240px);
+  max-height: calc(100vh - 240px);
   overflow-y: scroll;
 }
 @keyframes spinner {

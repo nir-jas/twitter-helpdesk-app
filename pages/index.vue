@@ -1,31 +1,13 @@
 <template>
   <div class="container p-2 conversations">
-    <div class="row mb-4">
-      <div class="col-12 col-lg-3">
-        <h4 class="m-0 p-0 strong">Conversations</h4>
-      </div>
-      <div class="col-6 col-lg-2 p-0">
-        <div class="input-group">
-          <span class="input-group-text search-icon rounded-pill"
-            ><fa :icon="['fas', 'search']" class="text-secondary"
-          /></span>
-          <input
-            type="text"
-            class="form-control form-control-sm rounded-pill search-input"
-            placeholder="Quick Search"
-          />
-        </div>
-      </div>
-      <div class="col-6 col-lg-7 text-end pe-0">
-        <button class="btn btn-light btn-sm rounded-pill px-3">
-          <fa :icon="['fas', 'filter']" /> Filter
-        </button>
-      </div>
-    </div>
+    <ConversationHeader />
 
     <div class="conversation-tweets">
-      <div class="row">
-        <div class="col-12 col-lg-3 conversation-tweet-cards">
+      <div v-if="tweets.length > 0" class="row">
+        <div
+          class="col-12 col-lg-3 conversation-tweet-cards d-lg-block"
+          :class="activeTweetId ? 'd-none' : ''"
+        >
           <Tweet
             v-for="item in tweets"
             :id="item.id_str"
@@ -39,12 +21,16 @@
             @select="showTweetReplies(item)"
           />
         </div>
-        <div class="col d-none d-lg-block conversation-tweets">
+        <div
+          class="col-12 col-lg-9 conversation-tweets d-lg-block"
+          :class="activeTweetId ? 'd-block' : ''"
+        >
           <div v-if="activeTweetId" class="row g-0 h-100">
-            <div class="col-8 border">
+            <div class="col-12 col-lg-8 border">
               <ChatHeader
-                :author_name="tweet.user.name"
-                :author_image="tweet.user.profile_image_url_https"
+                :author-name="tweet.user.name"
+                :author-image="tweet.user.profile_image_url_https"
+                @close="closeTweet"
               />
               <ChatWindow
                 :tweet-id="activeTweetId"
@@ -59,7 +45,7 @@
               />
             </div>
             <AuthorProfile
-              class="col"
+              class="col d-none d-lg-block"
               :name="tweet.user.name"
               :image="tweet.user.profile_image_url_https"
               :description="tweet.user.description"
@@ -67,19 +53,36 @@
               @close="closeTweet"
             />
           </div>
-          <div v-else class="row h-100">
+          <div v-else class="row h-100 m-0">
             <div
               class="col d-flex bg-white justify-content-center align-items-center card"
             >
-              <div class="text-center">
+              <div class="text-center py-5">
                 <fa
                   :icon="['fas', 'life-ring']"
                   size="3x"
                   class="text-secondary m-3"
                 />
-                <h6 class="lead">Select a tweet to see replies</h6>
+                <h6 v-if="tweets.length > 0" class="lead">
+                  Select a tweet to see replies
+                </h6>
+                <h6 v-else class="lead">No Mentioned Tweet Available</h6>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="row m-0">
+        <div
+          class="col d-flex bg-white justify-content-center align-items-center card"
+        >
+          <div class="text-center py-5">
+            <fa
+              :icon="['fas', 'life-ring']"
+              size="3x"
+              class="text-secondary m-3"
+            />
+            <h6 class="lead">No Mentioned Tweet Available</h6>
           </div>
         </div>
       </div>
@@ -114,12 +117,16 @@ export default {
     ).connect()
     ws.on('open', () => {
       this.isWsConnected = true
-      this.tweetChannel = ws.subscribe(`twitter:${this.$auth.user.screen_name}`)
-      this.tweetChannel.on('new:tweet', (data) => {
-        const tweet = data
-        tweet.is_new = true
-        this.tweets.unshift(tweet)
-      })
+      if (!ws.getSubscription(`twitter:${this.$auth.user.screen_name}`)) {
+        this.tweetChannel = ws.subscribe(
+          `twitter:${this.$auth.user.screen_name}`
+        )
+        this.tweetChannel.on('new:tweet', (data) => {
+          const tweet = data
+          tweet.is_new = true
+          this.tweets.unshift(tweet)
+        })
+      }
     })
     ws.on('close', () => {
       this.isWsConnected = false
@@ -175,18 +182,5 @@ export default {
   height: calc(100vh - 129px);
   max-height: calc(100vh - 129px);
   overflow-y: scroll;
-}
-
-.search-input {
-  border-left: none;
-  border-top-left-radius: 0px !important;
-  border-bottom-left-radius: 0px !important;
-}
-
-.search-icon {
-  background-color: transparent;
-  border-right: none;
-  border-top-right-radius: 0px !important;
-  border-bottom-right-radius: 0px !important;
 }
 </style>

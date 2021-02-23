@@ -1,4 +1,5 @@
 require('dotenv').config()
+import webpack from 'webpack'
 export default {
   ssr: false,
 
@@ -107,5 +108,10 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: ['@adonisjs/websocket-client'],
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      }),
+    ],
   },
 }

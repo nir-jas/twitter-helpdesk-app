@@ -1,19 +1,19 @@
 <template>
   <div class="reply-window position-sticky top-100 start-50">
     <div class="d-flex p-2 g-2 align-items-center">
-      <div class="pe-2">
+      <div class="pe-2 d-none d-lg-block">
         <img
           :src="authorImage.replace('_normal', '_bigger')"
           class="rounded-circle border"
-          width="40"
+          width="30"
         />
       </div>
       <form class="w-100" @submit.prevent="postTweet">
-        <div class="input-group">
+        <div class="input-group input-group-sm">
           <input
             v-model="status"
             type="text"
-            class="form-control border-end-0 reply-input"
+            class="form-control form-control-sm border-end-0 reply-input"
             placeholder="Reply . . ."
             required
           />

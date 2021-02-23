@@ -9,9 +9,20 @@
           </div>
           <div v-if="!isAgent" class="card-body text-center">
             <div class="d-grid">
-              <button class="btn bg-twitter" @click="getRequestToken()">
-                <fa :icon="['fab', 'twitter']" class="me-2" /> Login with
-                Twitter
+              <button
+                class="btn bg-twitter"
+                :disabled="isLoggingIn"
+                @click="getRequestToken()"
+              >
+                <span
+                  v-if="isLoggingIn"
+                  class="spinner-border text-light spinner-border-sm"
+                  role="status"
+                ></span>
+                <span v-else>
+                  <fa :icon="['fab', 'twitter']" class="me-2" /> Login with
+                  Twitter
+                </span>
               </button>
             </div>
           </div>
@@ -19,20 +30,20 @@
             <form @submit.prevent="agentLogin">
               <div class="mb-3">
                 <input
+                  id="email"
                   class="form-control"
                   type="email"
                   name="email"
-                  id="email"
                   placeholder="Enter Email"
                   required
                 />
               </div>
               <div class="mb-3">
                 <input
+                  id="password"
                   class="form-control"
                   type="password"
                   name="password"
-                  id="password"
                   placeholder="Enter Password"
                   required
                 />
@@ -71,19 +82,24 @@ export default {
   data() {
     return {
       isAgent: false,
+      isLoggingIn: false,
     }
   },
   methods: {
     getRequestToken() {
+      this.isLoggingIn = true
       this.$axios
         .get('/twitter/request_token')
         .then((response) => {
+          this.isLoggingIn = false
           window.open(
             `https://api.twitter.com/oauth/authenticate?${response.data.data}`,
             '_self'
           )
         })
         .catch((e) => {
+          this.isLoggingIn = false
+          // eslint-disable-next-line no-console
           console.log(e)
         })
     },

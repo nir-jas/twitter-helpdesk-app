@@ -1,5 +1,5 @@
 <template>
-  <div class="container px-2 pt-3 pb-3 bg-lg-5">
+  <div class="container px-2 pt-2 py-lg-3 bg-lg-5">
     <div class="d-flex justify-content-between">
       <div>
         <span class="text-secondary small border-bottom pb-1">Updates</span>
