@@ -53,7 +53,7 @@
               @close="closeTweet"
             />
           </div>
-          <div v-else class="row h-100 m-0">
+          <div v-else class="row h-100 m-0 d-none d-lg-block">
             <div
               class="col d-flex bg-white justify-content-center align-items-center card"
             >
@@ -63,10 +63,9 @@
                   size="3x"
                   class="text-secondary m-3"
                 />
-                <h6 v-if="tweets.length > 0" class="lead">
+                <h6 class="lead">
                   Select a tweet to see replies
                 </h6>
-                <h6 v-else class="lead">No Mentioned Tweet Available</h6>
               </div>
             </div>
           </div>
@@ -82,7 +81,7 @@
               size="3x"
               class="text-secondary m-3"
             />
-            <h6 class="lead">No Mentioned Tweet Available</h6>
+            <h6 class="lead">No Mentioned Tweets Available</h6>
           </div>
         </div>
       </div>
