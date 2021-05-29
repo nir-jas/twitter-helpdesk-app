@@ -18,3 +18,7 @@ $ npm run generate
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
+
+
+Checkout following repo for API Setup
+## [Twitter Helpdesk API](https://github.com/nir-jas/twitter-helpdesk-api)
